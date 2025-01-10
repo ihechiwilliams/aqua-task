@@ -1,0 +1,362 @@
+openapi: 3.0.0
+info:
+  title: Invoice Management API
+  version: 1.0.0
+  description: API for managing invoices, customers, and activities.
+  contact:
+    email: charlesclinton2003@gmail.com
+servers:
+  - url: https://api.aquaapp.com
+    description: Production server
+  - url: https://staging.api.aquaapp.com
+    description: Staging server
+tags:
+  - name: Customers
+    description: Manage customer data
+  - name: Resources
+    description: Manage resource data
+paths:
+  /v1/customers:
+    post:
+      summary: Register a new customer
+      description: Register a new customer with a unique name and email
+      operationId: v1-Create-Customer
+      tags:
+        - Customers
+      requestBody:
+        $ref: '#/components/requestBodies/CreateCustomerRequestBody'
+      responses:
+        '201':
+          $ref: '#/components/responses/CustomerResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/customers/{customer_id}/resources:
+    post:
+      summary: Add cloud resources to a customer
+      description: Assign cloud resources to a customer. Resources must have unique names.
+      operationId: v1-Create-Customer-Resources
+      tags:
+        - Customers
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          description: ID of the customer
+          schema:
+            type: string
+            format: uuid
+            example: ddab76f7-f979-4a1f-97a8-7175aeac962d
+      requestBody:
+        $ref: '#/components/requestBodies/CreateCustomerResourceRequestBody'
+      responses:
+        '201':
+          $ref: '#/components/responses/CustomerResourceResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      summary: Get all cloud resources for a customer
+      description: Retrieve all cloud resources associated with a specific customer.
+      operationId: v1-Get-Customer-Resources
+      tags:
+        - Customers
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          description: ID of the customer
+          schema:
+            type: string
+            format: uuid
+            example: ddab76f7-f979-4a1f-97a8-7175aeac962d
+      responses:
+        '200':
+          $ref: '#/components/responses/CustomerResourceResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/resources/{resource_id}:
+    patch:
+      summary: Update a cloud resource
+      description: Update details of a specific resource.
+      operationId: v1-Update-Resource
+      tags:
+        - resources
+      parameters:
+        - name: resource_id
+          in: path
+          required: true
+          description: ID of the resource to update.
+          schema:
+            type: string
+            format: uuid
+            example: ddab76f7-f979-4a1f-97a8-7175aeac962d
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateResource'
+      responses:
+        '200':
+          description: Resource updated successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Delete a resource
+      operationId: v1-Delete-Resource
+      tags:
+        - resources
+      parameters:
+        - name: resource_id
+          in: path
+          required: true
+          description: ID of the resource
+          schema:
+            type: string
+            format: uuid
+            example: ddab76f7-f979-4a1f-97a8-7175aeac962d
+      responses:
+        '204':
+          description: Invoice deleted successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    Error:
+      type: object
+      x-examples:
+        Example 1:
+          title: Server error
+          detail: 'Service temporarily unavailable, retry later'
+          status: 500
+          code: server_error
+          meta:
+            caused_by: ClassName
+      properties:
+        title:
+          type: string
+        detail:
+          type: string
+        status:
+          type: integer
+        code:
+          type: string
+        meta:
+          type: object
+      required:
+        - title
+        - detail
+        - status
+        - code
+    ErrorResponse:
+      title: ErrorResponse
+      type: object
+      description: Response that contains the list of errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+      required:
+        - errors
+    UpdateResource:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        region:
+          type: string
+    CustomerResponseData:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+      required:
+        - id
+        - name
+        - email
+    CustomerRequestBodyData:
+      type: object
+      properties:
+        name:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          format: email
+          example: johndoe@example.com
+      required:
+        - name
+        - email
+    CustomerResourceRequestBodyData:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the resource.
+        type:
+          type: string
+          description: The type of the resource.
+        region:
+          type: string
+          description: The region where the resource is located.
+      required:
+        - name
+        - type
+        - region
+    CustomerResourceResponseData:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier for the resource.
+        name:
+          type: string
+          description: The name of the resource.
+        type:
+          type: string
+          description: The type of the resource.
+        region:
+          type: string
+          description: The region where the resource is located.
+      required:
+        - id
+        - name
+        - type
+        - region
+  responses:
+    CustomerResponse:
+      description: example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerResponseData'
+            required:
+              - data
+    CustomerResourceResponse:
+      description: customer resource response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/CustomerResourceResponseData'
+            required:
+              - data
+  requestBodies:
+    CreateCustomerRequestBody:
+      description: Register Customer Request Body
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/CustomerRequestBodyData'
+            required:
+              - data
+    CreateCustomerResourceRequestBody:
+      description: Register Customer Resource Request Body
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerResourceRequestBodyData'
+            required:
+              - data

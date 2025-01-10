@@ -1,0 +1,5 @@
+package: aqua-backend
+generate:
+  client: true
+  models: true
+output: openapi/go/aqua-backend/client.gen.go
