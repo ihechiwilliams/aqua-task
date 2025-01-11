@@ -1,14 +1,15 @@
 package customers
 
 import (
-	"aqua-backend/internal/constants"
 	"context"
-	"github.com/google/uuid"
 	"regexp"
 	"testing"
 	"time"
 
+	"aqua-backend/internal/constants"
+
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/suite"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

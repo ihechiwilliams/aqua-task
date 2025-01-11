@@ -58,14 +58,11 @@ func (r *SQLRepository) DeleteNotificationByID(ctx context.Context, Id string) e
 func (r *SQLRepository) DeleteAllNotificationsByUserID(ctx context.Context, userId string) error {
 	result := r.db.WithContext(ctx).
 		Table(tableName).
-		Where("user_id = ?", userId).Delete(&Notification{})
+		Where("user_id = ?", userId).
+		Delete(&Notification{})
 
 	if result.Error != nil {
 		return result.Error
-	}
-
-	if result.RowsAffected == 0 {
-		return nil
 	}
 
 	return nil
@@ -78,7 +75,7 @@ func (r *SQLRepository) InsertNotification(ctx context.Context, userID, message 
 		Message:   message,
 		CreatedAt: time.Now(),
 	}
-	return r.db.WithContext(ctx).Create(notification).Error
+	return r.db.WithContext(ctx).Table(tableName).Create(notification).Error
 }
 
 func NewSQLRepository(db *gorm.DB) *SQLRepository {
