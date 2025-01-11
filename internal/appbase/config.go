@@ -16,12 +16,8 @@ type Config struct {
 	SentryDSN     string `env:"SENTRY_DSN"`
 
 	// Database
-	DatabasePrimaryHost     string `env:"DATABASE_HOST" env-required:"true"`
-	DatabaseReadReplicaHost string `env:"DATABASE_HOST_RO" env-required:"true"`
-	DatabaseName            string `env:"DATABASE_NAME" env-required:"true"`
-	DatabasePassword        string `env:"DATABASE_PASSWORD" env-required:"true"`
-	DatabasePort            string `env:"DATABASE_PORT" env-default:"5432"`
-	DatabaseUsername        string `env:"DATABASE_USERNAME" env-required:"true"`
+	RabbitmqURL string `env:"RABBITMQ_URL" env-required:"true"`
+	DatabaseURL string `env:"DATABASE_URL" env-required:"true"`
 }
 
 func LoadConfig() (*Config, error) {

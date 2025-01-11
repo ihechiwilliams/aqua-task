@@ -80,14 +80,31 @@ type UpdateResource struct {
 	Type   *string `json:"type,omitempty"`
 }
 
+// UserNotificationResponseData defines model for UserNotificationResponseData.
+type UserNotificationResponseData struct {
+	// Id The unique identifier for the notification.
+	Id openapi_types.UUID `json:"id"`
+
+	// Message The content of the notification.
+	Message string `json:"message"`
+
+	// UserId The user if.
+	UserId string `json:"user_id"`
+}
+
 // CustomerResourceResponse defines model for CustomerResourceResponse.
 type CustomerResourceResponse struct {
-	Data CustomerResourceResponseData `json:"data"`
+	Data []CustomerResourceResponseData `json:"data"`
 }
 
 // CustomerResponse defines model for CustomerResponse.
 type CustomerResponse struct {
-	Data []CustomerResponseData `json:"data"`
+	Data CustomerResponseData `json:"data"`
+}
+
+// UserNotificationsResponse defines model for UserNotificationsResponse.
+type UserNotificationsResponse struct {
+	Data []UserNotificationResponseData `json:"data"`
 }
 
 // CreateCustomerRequestBody defines model for CreateCustomerRequestBody.
@@ -130,6 +147,15 @@ type ServerInterface interface {
 	// Add cloud resources to a customer
 	// (POST /v1/customers/{customer_id}/resources)
 	V1CreateCustomerResources(c *gin.Context, customerId openapi_types.UUID)
+	// Delete a notification
+	// (DELETE /v1/notification/{notification_id})
+	V1DeleteNotification(c *gin.Context, notificationId openapi_types.UUID)
+	// Delete a notification
+	// (DELETE /v1/notifications/{user_id})
+	V1DeleteUserNotifications(c *gin.Context, userId string)
+	// Get all notifications for a user
+	// (GET /v1/notifications/{user_id})
+	V1GetUserNotifications(c *gin.Context, userId string)
 	// Delete a resource
 	// (DELETE /v1/resources/{resource_id})
 	V1DeleteResource(c *gin.Context, resourceId openapi_types.UUID)
@@ -206,6 +232,78 @@ func (siw *ServerInterfaceWrapper) V1CreateCustomerResources(c *gin.Context) {
 	}
 
 	siw.Handler.V1CreateCustomerResources(c, customerId)
+}
+
+// V1DeleteNotification operation middleware
+func (siw *ServerInterfaceWrapper) V1DeleteNotification(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "notification_id" -------------
+	var notificationId openapi_types.UUID
+
+	err = runtime.BindStyledParameterWithOptions("simple", "notification_id", c.Param("notification_id"), &notificationId, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter notification_id: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.V1DeleteNotification(c, notificationId)
+}
+
+// V1DeleteUserNotifications operation middleware
+func (siw *ServerInterfaceWrapper) V1DeleteUserNotifications(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "user_id" -------------
+	var userId string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "user_id", c.Param("user_id"), &userId, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter user_id: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.V1DeleteUserNotifications(c, userId)
+}
+
+// V1GetUserNotifications operation middleware
+func (siw *ServerInterfaceWrapper) V1GetUserNotifications(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "user_id" -------------
+	var userId string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "user_id", c.Param("user_id"), &userId, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter user_id: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.V1GetUserNotifications(c, userId)
 }
 
 // V1DeleteResource operation middleware
@@ -286,6 +384,9 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	router.POST(options.BaseURL+"/v1/customers", wrapper.V1CreateCustomer)
 	router.GET(options.BaseURL+"/v1/customers/:customer_id/resources", wrapper.V1GetCustomerResources)
 	router.POST(options.BaseURL+"/v1/customers/:customer_id/resources", wrapper.V1CreateCustomerResources)
+	router.DELETE(options.BaseURL+"/v1/notification/:notification_id", wrapper.V1DeleteNotification)
+	router.DELETE(options.BaseURL+"/v1/notifications/:user_id", wrapper.V1DeleteUserNotifications)
+	router.GET(options.BaseURL+"/v1/notifications/:user_id", wrapper.V1GetUserNotifications)
 	router.DELETE(options.BaseURL+"/v1/resources/:resource_id", wrapper.V1DeleteResource)
 	router.PATCH(options.BaseURL+"/v1/resources/:resource_id", wrapper.V1UpdateResource)
 }
@@ -293,29 +394,33 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
+	"AP//ie+K+94pAAA=",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

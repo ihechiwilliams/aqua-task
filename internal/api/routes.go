@@ -42,3 +42,15 @@ func (r Routes) V1DeleteResource(c *gin.Context, resourceId openapi_types.UUID) 
 func (r Routes) V1UpdateResource(c *gin.Context, resourceId openapi_types.UUID) {
 	r.v1.V1UpdateResource(c, resourceId)
 }
+
+func (r Routes) V1DeleteNotification(c *gin.Context, notificationId openapi_types.UUID) {
+	r.v1.V1DeleteNotification(c, notificationId)
+}
+
+func (r Routes) V1GetUserNotifications(c *gin.Context, userId string) {
+	r.v1.V1GetUserNotifications(c, userId)
+}
+
+func (r Routes) V1DeleteUserNotifications(c *gin.Context, userId string) {
+	r.v1.V1DeleteUserNotifications(c, userId)
+}

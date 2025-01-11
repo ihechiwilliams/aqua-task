@@ -1,22 +1,19 @@
 package v1
 
 type API struct {
-	activitiesHandler *ActivitiesHandler
-	customersHandler  *CustomersHandler
-	invoicesHandler   *InvoiceHandler
-	resourceHandler   *ResourcesHandler
+	customersHandler    *CustomersHandler
+	resourceHandler     *ResourcesHandler
+	notificationHandler *NotificationsHandler
 }
 
 func NewAPI(
-	activitiesHandler *ActivitiesHandler,
 	customersHandler *CustomersHandler,
-	invoicesHandler *InvoiceHandler,
 	resourcesHandler *ResourcesHandler,
+	notificationHandler *NotificationsHandler,
 ) *API {
 	return &API{
-		activitiesHandler: activitiesHandler,
-		customersHandler:  customersHandler,
-		invoicesHandler:   invoicesHandler,
-		resourceHandler:   resourcesHandler,
+		customersHandler:    customersHandler,
+		resourceHandler:     resourcesHandler,
+		notificationHandler: notificationHandler,
 	}
 }

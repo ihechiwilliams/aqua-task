@@ -1,16 +1,65 @@
-version: '3.9'
 services:
-  db:
-    image: postgres:14
-    container_name: cloud_resource_db
+  app-seed:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+      - rabbitmq
+    ports:
+      - "8080:8080"
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: cloud_resource_db
+      DATABASE_URL: "postgres://postgres:password@postgres:5432/aqua_task?sslmode=disable"
+      RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
+    command: ["/usr/local/bin/wait-for-rabbitmq.sh","./main", "seed"] # Run the seed command
+
+  app-start:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+      - rabbitmq
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: "postgres://postgres:password@postgres:5432/aqua_task?sslmode=disable"
+      RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
+    command: ["/usr/local/bin/wait-for-rabbitmq.sh","./main", "start"] # Run the start command
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
     ports:
       - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: aqua_task
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_ERLANG_COOKIE: "secretcookie"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:15672" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 
 volumes:
-  db_data:
+  postgres_data:

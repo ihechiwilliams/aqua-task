@@ -8,4 +8,6 @@ const (
 	EnvironmentTest                     = "test"
 	EnvironmentDevelopment              = "development"
 	InjectorDatabase                    = "database.aqua-backend"
+	InjectorRabbitmq                    = "rabbitmq.aqua-backend"
+	InjectorRabbitmqConsumer            = "rabbitmq-consumer.aqua-backend"
 )

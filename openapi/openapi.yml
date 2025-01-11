@@ -179,6 +179,112 @@ paths:
             example: ddab76f7-f979-4a1f-97a8-7175aeac962d
       responses:
         '204':
+          description: Resource deleted successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/notifications/{user_id}:
+    get:
+      summary: Get all notifications for a user
+      description: Retrieve all notifications associated with a specific user.
+      operationId: v1-Get-User-Notifications
+      tags:
+        - Notifications
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: ID of the user
+          schema:
+            type: string
+            example: ddab76f7-f979-4a1f-97a8-7175aeac962d
+      responses:
+        '200':
+          $ref: '#/components/responses/UserNotificationsResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Delete a notification
+      operationId: v1-Delete-User-Notifications
+      tags:
+        - notifications
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: ID of the notification
+          schema:
+            type: string
+            example: ddab76f7-f979-4a1f-97a8-7175aeac962d
+      responses:
+        '204':
+          description: Notifications deleted successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/notification/{notification_id}:
+    delete:
+      summary: Delete a notification
+      operationId: v1-Delete-Notification
+      tags:
+        - notifications
+      parameters:
+        - name: notification_id
+          in: path
+          required: true
+          description: ID of the notification
+          schema:
+            type: string
+            format: uuid
+            example: ddab76f7-f979-4a1f-97a8-7175aeac962d
+      responses:
+        '204':
           description: Invoice deleted successfully
         '400':
           description: Bad Request
@@ -310,6 +416,23 @@ components:
         - name
         - type
         - region
+    UserNotificationResponseData:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier for the notification.
+        user_id:
+          type: string
+          description: The user if.
+        message:
+          type: string
+          description: The content of the notification.
+      required:
+        - id
+        - user_id
+        - message
   responses:
     CustomerResponse:
       description: example response
@@ -319,9 +442,7 @@ components:
             type: object
             properties:
               data:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CustomerResponseData'
+                $ref: '#/components/schemas/CustomerResponseData'
             required:
               - data
     CustomerResourceResponse:
@@ -332,7 +453,22 @@ components:
             type: object
             properties:
               data:
-                $ref: '#/components/schemas/CustomerResourceResponseData'
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerResourceResponseData'
+            required:
+              - data
+    UserNotificationsResponse:
+      description: user notification response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserNotificationResponseData'
             required:
               - data
   requestBodies:

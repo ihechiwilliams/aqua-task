@@ -17,6 +17,13 @@ type ResourcesHandler struct {
 	customerRepo  customers.Repository
 }
 
+func NewResourcesHandler(resourcesRepo resources.Repository, customerRepo customers.Repository) *ResourcesHandler {
+	return &ResourcesHandler{
+		resourcesRepo: resourcesRepo,
+		customerRepo:  customerRepo,
+	}
+}
+
 func (a *API) V1CreateCustomerResources(c *gin.Context, customerId openapi_types.UUID) {
 	var reqBody server.V1CreateCustomerResourcesJSONRequestBody
 

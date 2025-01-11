@@ -25,7 +25,7 @@ type SQLRepository struct {
 	db *gorm.DB
 }
 
-func (s *SQLRepository) CreateResources(ctx context.Context, customerID uuid.UUID, resources []*DBResource) ([]*Resource, error) {
+func (s *SQLRepository) CreateResourcesByCustomerID(ctx context.Context, customerID uuid.UUID, resources []*DBResource) ([]*Resource, error) {
 	var resourceNames []string
 	for _, resource := range resources {
 		resourceNames = append(resourceNames, resource.Name)

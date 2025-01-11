@@ -1,2 +1,29 @@
 with-expecter: false
 packages:
+  aqua-backend/internal/repositories/customers:
+    interfaces:
+      Repository:
+        config:
+          dir: internal/repositories/customers/mocks
+          exported: true
+          outpkg: mocks
+          structname: SQLRepository
+          disable-version-string: true
+  aqua-backend/internal/repositories/resources:
+    interfaces:
+      Repository:
+        config:
+          dir: internal/repositories/resources/mocks
+          exported: true
+          outpkg: mocks
+          structname: SQLRepository
+          disable-version-string: true
+  aqua-backend/internal/repositories/notification:
+    interfaces:
+      Repository:
+        config:
+          dir: internal/repositories/notification/mocks
+          exported: true
+          outpkg: mocks
+          structname: SQLRepository
+          disable-version-string: true

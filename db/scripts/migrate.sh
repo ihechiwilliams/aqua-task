@@ -1,4 +1,5 @@
-echo "Running migration on: ${DATABASE_HOST}:${DATABASE_PORT}"
+#!/bin/bash
+echo "Running migration on: ${DATABASE_URL}"
 migrate -path ./db/migrations \
-  -database "postgresql://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?sslmode=disable"\
+  -database "${DATABASE_URL}"\
   up

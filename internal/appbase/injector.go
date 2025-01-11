@@ -1,18 +1,18 @@
 package appbase
 
 import (
+	"aqua-backend/internal/repositories/notification"
+	"aqua-backend/internal/repositories/resources"
+	"aqua-backend/pkg/rabbitmq"
 	"github.com/gin-gonic/gin"
 	"os"
 
 	"aqua-backend/internal/api"
-	"aqua-backend/internal/repositories/invoices"
-	"aqua-backend/internal/repositories/invoicesitems"
 	"aqua-backend/pkg/postgres"
 
 	"gorm.io/gorm"
 
 	v1 "aqua-backend/internal/api/v1"
-	"aqua-backend/internal/repositories/activities"
 	"aqua-backend/internal/repositories/customers"
 
 	"github.com/rs/zerolog"
@@ -48,31 +48,31 @@ func NewInjector(serviceName string, cfg *Config) *do.Injector {
 	// ===========================
 	//	API services & Routes
 	// ===========================
-	do.Provide(injector, func(i *do.Injector) (*v1.ActivitiesHandler, error) {
-		return v1.NewActivitiesHandler(
-			do.MustInvoke[*activities.SQLRepository](i),
-		), nil
-	})
-
 	do.Provide(injector, func(i *do.Injector) (*v1.CustomersHandler, error) {
 		return v1.NewCustomersHandler(
 			do.MustInvoke[*customers.SQLRepository](i),
 		), nil
 	})
 
-	do.Provide(injector, func(i *do.Injector) (*v1.InvoiceHandler, error) {
-		return v1.NewInvoiceHandler(
-			do.MustInvoke[*invoices.SQLRepository](i),
-			do.MustInvoke[*invoicesitems.SQLRepository](i),
+	do.Provide(injector, func(i *do.Injector) (*v1.ResourcesHandler, error) {
+		return v1.NewResourcesHandler(
+			do.MustInvoke[*resources.SQLRepository](i),
+			do.MustInvoke[*customers.SQLRepository](i),
+		), nil
+	})
+
+	do.Provide(injector, func(i *do.Injector) (*v1.NotificationsHandler, error) {
+		return v1.NewNotificationHandler(
+			do.MustInvoke[*notification.SQLRepository](i),
 		), nil
 	})
 
 	do.Provide(injector, func(i *do.Injector) (*v1.API, error) {
-		activitiesHandler := do.MustInvoke[*v1.ActivitiesHandler](i)
 		customersHandler := do.MustInvoke[*v1.CustomersHandler](i)
-		invoiceHandler := do.MustInvoke[*v1.InvoiceHandler](i)
+		resourcesHandler := do.MustInvoke[*v1.ResourcesHandler](i)
+		notificationHandler := do.MustInvoke[*v1.NotificationsHandler](i)
 
-		return v1.NewAPI(activitiesHandler, customersHandler, invoiceHandler), nil
+		return v1.NewAPI(customersHandler, resourcesHandler, notificationHandler), nil
 	})
 
 	do.Provide(injector, func(i *do.Injector) (*api.Routes, error) {
@@ -84,37 +84,29 @@ func NewInjector(serviceName string, cfg *Config) *do.Injector {
 	// ===========================
 	//	Database Config & Repo
 	// ===========================
-	do.Provide(injector, func(i *do.Injector) (*activities.SQLRepository, error) {
-		gormDB := do.MustInvokeNamed[*gorm.DB](i, InjectorDatabase)
-		return activities.NewSQLRepository(gormDB), nil
-	})
-
 	do.Provide(injector, func(i *do.Injector) (*customers.SQLRepository, error) {
 		gormDB := do.MustInvokeNamed[*gorm.DB](i, InjectorDatabase)
 		return customers.NewSQLRepository(gormDB), nil
 	})
 
-	do.Provide(injector, func(i *do.Injector) (*invoices.SQLRepository, error) {
+	do.Provide(injector, func(i *do.Injector) (*resources.SQLRepository, error) {
 		gormDB := do.MustInvokeNamed[*gorm.DB](i, InjectorDatabase)
-		return invoices.NewSQLRepository(gormDB), nil
+		return resources.NewSQLRepository(gormDB), nil
 	})
 
-	do.Provide(injector, func(i *do.Injector) (*invoicesitems.SQLRepository, error) {
+	do.Provide(injector, func(i *do.Injector) (*notification.SQLRepository, error) {
 		gormDB := do.MustInvokeNamed[*gorm.DB](i, InjectorDatabase)
-		return invoicesitems.NewSQLRepository(gormDB), nil
+		return notification.NewSQLRepository(gormDB), nil
 	})
 
 	do.ProvideNamed(injector, InjectorDatabase, func(i *do.Injector) (*gorm.DB, error) {
 		return postgres.InitDB(
-			serviceName, &postgres.Config{
-				Name:            cfg.DatabaseName,
-				Password:        cfg.DatabasePassword,
-				PrimaryHost:     cfg.DatabasePrimaryHost,
-				ReadReplicaHost: cfg.DatabaseReadReplicaHost,
-				User:            cfg.DatabaseUsername,
-				Port:            cfg.DatabasePort,
-			},
+			cfg.DatabaseURL,
 		)
+	})
+
+	do.ProvideNamed(injector, InjectorRabbitmq, func(i *do.Injector) (*rabbitmq.RabbitMQ, error) {
+		return rabbitmq.NewRabbitMQ(cfg.RabbitmqURL)
 	})
 
 	return injector
