@@ -13,6 +13,9 @@ env:
 env-test:
 	cp -v .env.test .env
 
+build-app:
+	docker compose build app-start
+
 # Start the app with seeding
 seed:
 	docker compose up --build app-seed
