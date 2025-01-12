@@ -24,6 +24,9 @@ seed:
 start:
 	docker compose up --build app-start
 
+start-notification:
+	docker compose up --build notification
+
 clean:
 	docker compose down --remove-orphans --volumes
 

@@ -39,4 +39,7 @@ Ready to launch? Follow these steps:
   ```bash
     make start
   ```
-  
+- Start the  notification service
+  ```bash
+    make start-notification
+  ```

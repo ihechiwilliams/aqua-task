@@ -1,16 +1,10 @@
 package main
 
 import (
-	"aqua-backend/internal/api/v1"
-	"aqua-backend/internal/notificationconsumer"
-	"aqua-backend/internal/repositories/notification"
 	"aqua-backend/pkg/rabbitmq"
-	"aqua-backend/proto"
 	"context"
 	"fmt"
 	"github.com/samber/do"
-	"google.golang.org/grpc"
-	"net"
 	"net/http"
 
 	"aqua-backend/cmd"
@@ -37,37 +31,21 @@ func main() {
 
 	// Initialize dependencies
 	rmq := do.MustInvokeNamed[*rabbitmq.RabbitMQ](app.Injector, appbase.InjectorRabbitmq)
-	notificationRepo := do.MustInvoke[*notification.SQLRepository](app.Injector)
 
-	// Start Notification Consumer in a separate goroutine
-	go func() {
-		queueName := "notifications_queue" // Replace with your queue name
-		err := rmq.DeclareQueue(queueName)
-		if err != nil {
-			log.Fatal().Msgf("Failed to declare queue: %v", err)
-		}
+	// Simulate publishing a message
+	queue := "notifications_queue"
+	err := rmq.DeclareQueue(queue)
+	if err != nil {
+		log.Fatal().Msgf("Failed to declare queue: %v", err)
+	}
 
-		log.Info().Msg("Starting notification consumer...")
-		notificationconsumer.StartNotificationConsumer(rmq, queueName, notificationRepo)
-	}()
+	message := `{"user_id": "123", "message": "New resource created"}`
+	err = rmq.PublishMessage(queue, message)
+	if err != nil {
+		log.Fatal().Msgf("Failed to publish message: %v", err)
+	}
 
-	// Start gRPC server
-	go func() {
-		listener, err := net.Listen("tcp", ":50051")
-		if err != nil {
-			log.Fatal().Msgf("Failed to listen on port 50051: %v", err)
-		}
-
-		grpcServer := grpc.NewServer()
-		proto.RegisterNotificationServiceServer(grpcServer, &v1.NotificationServer{
-			Repo: notificationRepo,
-		})
-
-		log.Info().Msg("gRPC server is running on port 50051")
-		if err := grpcServer.Serve(listener); err != nil {
-			log.Fatal().Msgf("Failed to serve gRPC server: %v", err)
-		}
-	}()
+	log.Info().Msg("Message published!")
 
 	// HTTP server setup
 	router := buildRouter(app)

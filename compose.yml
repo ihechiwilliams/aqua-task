@@ -11,7 +11,7 @@ services:
     environment:
       DATABASE_URL: "postgres://postgres:password@postgres:5432/aqua_task?sslmode=disable"
       RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
-    command: ["/usr/local/bin/wait-for-rabbitmq.sh","./main", "seed"] # Run the seed command
+    command: ["/usr/local/bin/wait-for-rabbitmq.sh","main", "seed"] # Run the seed command
 
   app-start:
     build:
@@ -25,7 +25,21 @@ services:
     environment:
       DATABASE_URL: "postgres://postgres:password@postgres:5432/aqua_task?sslmode=disable"
       RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
-    command: ["/usr/local/bin/wait-for-rabbitmq.sh","./main", "start"] # Run the start command
+    command: ["/usr/local/bin/wait-for-rabbitmq.sh","main", "start"] # Run the start command
+
+  notification:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: [ "notification" ]
+    environment:
+      DATABASE_URL: "postgres://postgres:password@postgres:5432/aqua_task?sslmode=disable"
+      RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
+    depends_on:
+      - postgres
+      - rabbitmq
+    ports:
+      - "9090:9090"
 
   postgres:
     image: postgres:15

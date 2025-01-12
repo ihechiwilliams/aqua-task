@@ -25,3 +25,16 @@ func (r *RabbitMQ) DeclareQueue(queueName string) error {
 	_, err := r.Channel.QueueDeclare(queueName, true, false, false, false, nil)
 	return err
 }
+
+func (r *RabbitMQ) PublishMessage(queueName, message string) error {
+	return r.Channel.Publish(
+		"",        // exchange
+		queueName, // routing key
+		false,     // mandatory
+		false,     // immediate
+		amqp.Publishing{
+			ContentType: "text/plain",
+			Body:        []byte(message),
+		},
+	)
+}
