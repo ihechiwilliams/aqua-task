@@ -26,19 +26,3 @@ jobs:
 
       - name: Run tests
         run: go test ./... -v
-
-  docker:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Build Docker image
-        run: docker compose build
-
-      - name: Run Docker Compose services
-        run: docker compose up --detach
-
-      - name: Run application tests
-        run: docker compose exec app-start go test ./...
