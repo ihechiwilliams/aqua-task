@@ -19,13 +19,18 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: 1.23 # Replace with your Go version
+          go-version: '1.23'
 
       - name: Install dependencies
-        run: go mod tidy
+        run: |
+          go mod tidy
+          go get github.com/getsentry/sentry-go
+          go get github.com/DATA-DOG/go-sqlmock
+          go get github.com/stretchr/testify
 
       - name: Install Mockery
         run: |
+          go install github.com/vektra/mockery/v2@v2.43.0
           go run github.com/vektra/mockery/v2@v2.43.0
 
       - name: Generate mocks
