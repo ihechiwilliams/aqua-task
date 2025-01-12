@@ -25,7 +25,8 @@ jobs:
         run: go mod tidy
 
       - name: Install Mockery
-        run: go install github.com/vektra/mockery/v2@v2.43.0
+        run: |
+          go run github.com/vektra/mockery/v2@v2.43.0
 
       - name: Generate mocks
         run: go generate ./...
@@ -34,7 +35,6 @@ jobs:
         run: |
           curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.54.2
           golangci-lint run --config .golangci.yml ./...
-
 
       - name: Run tests
         run: go test ./... -v
