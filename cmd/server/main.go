@@ -1,16 +1,17 @@
 package main
 
 import (
+	"context"
+	"fmt"
+	"net/http"
+
 	"aqua-backend/cmd"
 	"aqua-backend/internal/appbase"
 	"aqua-backend/pkg/rabbitmq"
 	"aqua-backend/pkg/signals"
-	"context"
-	"fmt"
-	"github.com/samber/do"
-	"net/http"
 
 	"github.com/rs/zerolog/log"
+	"github.com/samber/do"
 )
 
 const (

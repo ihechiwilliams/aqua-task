@@ -51,19 +51,16 @@ linters:
   enable:
     - dupl
     - exhaustive
-    - exportloopref
-    - gas
+    - copyloopvar
     - gocritic
     - gocyclo
     - godot
     - gofmt
     - goimports
-    - gomnd
     - gosec
     - gosimple
     - govet
     - ineffassign
-    - megacheck
     - misspell
     - nakedret
     - nonamedreturns

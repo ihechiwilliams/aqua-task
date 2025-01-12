@@ -1,15 +1,17 @@
 package cmd
 
 import (
+	"fmt"
+	"log"
+
 	"aqua-backend/internal/appbase"
 	customers2 "aqua-backend/internal/repositories/customers"
 	"aqua-backend/pkg/postgres"
-	"fmt"
+
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 	"github.com/spf13/cobra"
 	"gorm.io/plugin/dbresolver"
-	"log"
 )
 
 var seedCmd = &cobra.Command{

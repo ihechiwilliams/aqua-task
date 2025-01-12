@@ -2,7 +2,7 @@ package notification
 
 import (
 	"time"
-	
+
 	"github.com/google/uuid"
 )
 

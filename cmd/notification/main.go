@@ -6,7 +6,7 @@ import (
 	"net"
 	"net/http"
 
-	"aqua-backend/internal/api/v1"
+	v1 "aqua-backend/internal/api/v1"
 	"aqua-backend/internal/appbase"
 	"aqua-backend/internal/notificationconsumer"
 	"aqua-backend/internal/repositories/notification"

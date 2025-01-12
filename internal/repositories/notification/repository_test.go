@@ -3,13 +3,14 @@ package notification
 import (
 	"context"
 	"fmt"
+	"testing"
+	"time"
+
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/suite"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"testing"
-	"time"
 )
 
 type TestSuiteSQLRepository struct {
