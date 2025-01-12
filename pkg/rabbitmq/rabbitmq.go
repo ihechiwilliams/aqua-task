@@ -14,10 +14,12 @@ func NewRabbitMQ(url string) (*RabbitMQ, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	ch, err := conn.Channel()
 	if err != nil {
 		return nil, err
 	}
+
 	return &RabbitMQ{Connection: conn, Channel: ch}, nil
 }
 

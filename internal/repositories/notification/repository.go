@@ -3,9 +3,10 @@ package notification
 import (
 	"context"
 	"errors"
+	"time"
+
 	"github.com/google/uuid"
 	"gorm.io/gorm"
-	"time"
 )
 
 const (
@@ -13,22 +14,22 @@ const (
 )
 
 type Repository interface {
-	InsertNotification(ctx context.Context, userId, message string) error
-	GetNotificationsByUserID(ctx context.Context, userId string) ([]*Notification, error)
-	DeleteNotificationByID(ctx context.Context, Id string) error
-	DeleteAllNotificationsByUserID(ctx context.Context, userId string) error
+	InsertNotification(ctx context.Context, userID, message string) error
+	GetNotificationsByUserID(ctx context.Context, userID string) ([]*Notification, error)
+	DeleteNotificationByID(ctx context.Context, id string) error
+	DeleteAllNotificationsByUserID(ctx context.Context, userID string) error
 }
 
 type SQLRepository struct {
 	db *gorm.DB
 }
 
-func (r *SQLRepository) GetNotificationsByUserID(ctx context.Context, userId string) ([]*Notification, error) {
+func (r *SQLRepository) GetNotificationsByUserID(ctx context.Context, userID string) ([]*Notification, error) {
 	var notifications []*Notification
 
 	result := r.db.WithContext(ctx).
 		Table(tableName).
-		Where("user_id = ?", userId).
+		Where("user_id = ?", userID).
 		Find(&notifications)
 
 	if result.Error != nil {
@@ -42,23 +43,25 @@ func (r *SQLRepository) GetNotificationsByUserID(ctx context.Context, userId str
 	return notifications, nil
 }
 
-func (r *SQLRepository) DeleteNotificationByID(ctx context.Context, Id string) error {
+func (r *SQLRepository) DeleteNotificationByID(ctx context.Context, id string) error {
 	result := r.db.WithContext(ctx).
 		Table(tableName).
-		Where("id = ?", Id).Delete(&Notification{})
+		Where("id = ?", id).Delete(&Notification{})
 	if result.Error != nil {
 		return result.Error
 	}
+
 	if result.RowsAffected == 0 {
 		return errors.New("no resource found with the given ID")
 	}
+
 	return nil
 }
 
-func (r *SQLRepository) DeleteAllNotificationsByUserID(ctx context.Context, userId string) error {
+func (r *SQLRepository) DeleteAllNotificationsByUserID(ctx context.Context, userID string) error {
 	result := r.db.WithContext(ctx).
 		Table(tableName).
-		Where("user_id = ?", userId).
+		Where("user_id = ?", userID).
 		Delete(&Notification{})
 
 	if result.Error != nil {
@@ -75,6 +78,7 @@ func (r *SQLRepository) InsertNotification(ctx context.Context, userID, message 
 		Message:   message,
 		CreatedAt: time.Now(),
 	}
+
 	return r.db.WithContext(ctx).Table(tableName).Create(notification).Error
 }
 

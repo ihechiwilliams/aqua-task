@@ -1,12 +1,12 @@
 package v1
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 
 	"aqua-backend/internal/api/server"
 	"aqua-backend/internal/repositories/customers"
 
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 

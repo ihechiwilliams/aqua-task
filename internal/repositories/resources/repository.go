@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"gorm.io/plugin/dbresolver"
@@ -26,7 +27,7 @@ type SQLRepository struct {
 }
 
 func (s *SQLRepository) CreateResourcesByCustomerID(ctx context.Context, customerID uuid.UUID, resources []*DBResource) ([]*Resource, error) {
-	var resourceNames []string
+	resourceNames := make([]string, 0, len(resources))
 	for _, resource := range resources {
 		resourceNames = append(resourceNames, resource.Name)
 	}
@@ -44,6 +45,7 @@ func (s *SQLRepository) CreateResourcesByCustomerID(ctx context.Context, custome
 	}
 
 	var filteredResources []*DBResource
+
 	for _, resource := range resources {
 		if _, exists := nameSet[resource.Name]; !exists {
 			resource.CustomerID = customerID
@@ -95,9 +97,11 @@ func (s *SQLRepository) DeleteResource(ctx context.Context, id uuid.UUID) error 
 	if result.Error != nil {
 		return result.Error
 	}
+
 	if result.RowsAffected == 0 {
 		return errors.New("no resource found with the given ID")
 	}
+
 	return nil
 }
 

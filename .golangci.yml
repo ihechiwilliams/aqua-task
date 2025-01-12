@@ -1,0 +1,76 @@
+run:
+  timeout: 5m
+
+issues:
+  exclude-dirs:
+    - vendor
+
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gochecknoglobals
+        - wrapcheck
+        - unparam
+        - gocritic
+
+linters-settings:
+  goimports:
+    local-prefixes: fairmoney/lendmate-go
+  goconst:
+    min-len: 2
+    min-occurrences: 3
+    ignore-tests: true
+  misspell:
+    locale: US
+  lll:
+    line-length: 140
+  gocritic:
+    enabled-tags:
+      - performance
+      - style
+      - experimental
+    disabled-checks:
+      - wrapperFunc
+      - hugeParam
+      - rangeValCopy
+      - unnamedResult
+  dupl:
+    threshold: 200
+  wrapcheck:
+    ignoreSigRegexps:
+      - 'func \(github\.com/labstack/echo/..\.Context\)\.*' # ignore echo.Context methods
+  gomnd:
+    ignored-files:
+      - 'injector.go'
+  exhaustive:
+    default-signifies-exhaustive: true
+    default-case-required: true
+
+linters:
+  disable-all: true
+  enable:
+    - dupl
+    - exhaustive
+    - exportloopref
+    - gas
+    - gocritic
+    - gocyclo
+    - godot
+    - gofmt
+    - goimports
+    - gomnd
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - megacheck
+    - misspell
+    - nakedret
+    - nonamedreturns
+    - prealloc
+    - stylecheck
+    - typecheck
+    - unconvert
+    - unused
+    - wsl
+  fast: false

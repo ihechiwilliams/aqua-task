@@ -51,8 +51,5 @@ func NewRouterGin(serviceName string, timeout time.Duration) *gin.Engine {
 		c.String(http.StatusOK, "OK")
 	})
 
-	// OpenAPI Middleware
-	//r.Use(openAPIMiddleware.Handler())
-
 	return r
 }

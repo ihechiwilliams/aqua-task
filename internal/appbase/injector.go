@@ -1,22 +1,20 @@
 package appbase
 
 import (
-	"aqua-backend/internal/repositories/notification"
-	"aqua-backend/internal/repositories/resources"
-	"aqua-backend/pkg/rabbitmq"
-	"github.com/gin-gonic/gin"
 	"os"
 
 	"aqua-backend/internal/api"
-	"aqua-backend/pkg/postgres"
-
-	"gorm.io/gorm"
-
 	v1 "aqua-backend/internal/api/v1"
 	"aqua-backend/internal/repositories/customers"
+	"aqua-backend/internal/repositories/notification"
+	"aqua-backend/internal/repositories/resources"
+	"aqua-backend/pkg/postgres"
+	"aqua-backend/pkg/rabbitmq"
 
+	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
 	"github.com/samber/do"
+	"gorm.io/gorm"
 )
 
 func NewInjector(serviceName string, cfg *Config) *do.Injector {
@@ -41,7 +39,6 @@ func NewInjector(serviceName string, cfg *Config) *do.Injector {
 	})
 
 	do.ProvideNamed(injector, InjectorApplicationRouter, func(i *do.Injector) (*gin.Engine, error) {
-
 		return NewRouterGin(serviceName, cfg.HTTPServerTimeout()), nil
 	})
 

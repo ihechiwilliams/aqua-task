@@ -1,12 +1,14 @@
 package v1
 
 import (
+	"net/http"
+
 	"aqua-backend/internal/api/server"
 	"aqua-backend/internal/repositories/notification"
+
 	"github.com/gin-gonic/gin"
 	openapi_types "github.com/oapi-codegen/runtime/types"
 	"github.com/samber/lo"
-	"net/http"
 )
 
 type NotificationsHandler struct {
@@ -19,8 +21,8 @@ func NewNotificationHandler(notificationRepo notification.Repository) *Notificat
 	}
 }
 
-func (a *API) V1DeleteNotification(c *gin.Context, notificationId openapi_types.UUID) {
-	err := a.notificationHandler.notificationRepo.DeleteNotificationByID(c.Request.Context(), notificationId.String())
+func (a *API) V1DeleteNotification(c *gin.Context, notificationID openapi_types.UUID) {
+	err := a.notificationHandler.notificationRepo.DeleteNotificationByID(c.Request.Context(), notificationID.String())
 	if err != nil {
 		server.ProcessingError(err, c)
 
@@ -30,8 +32,8 @@ func (a *API) V1DeleteNotification(c *gin.Context, notificationId openapi_types.
 	c.JSON(http.StatusNoContent, gin.H{"msg": "notifications deleted"})
 }
 
-func (a *API) V1GetUserNotifications(c *gin.Context, userId string) {
-	result, err := a.notificationHandler.notificationRepo.GetNotificationsByUserID(c.Request.Context(), userId)
+func (a *API) V1GetUserNotifications(c *gin.Context, userID string) {
+	result, err := a.notificationHandler.notificationRepo.GetNotificationsByUserID(c.Request.Context(), userID)
 	if err != nil {
 		server.ProcessingError(err, c)
 
@@ -43,8 +45,8 @@ func (a *API) V1GetUserNotifications(c *gin.Context, userId string) {
 	}))
 }
 
-func (a *API) V1DeleteUserNotifications(c *gin.Context, userId string) {
-	err := a.notificationHandler.notificationRepo.DeleteAllNotificationsByUserID(c.Request.Context(), userId)
+func (a *API) V1DeleteUserNotifications(c *gin.Context, userID string) {
+	err := a.notificationHandler.notificationRepo.DeleteAllNotificationsByUserID(c.Request.Context(), userID)
 	if err != nil {
 		server.ProcessingError(err, c)
 

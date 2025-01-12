@@ -7,8 +7,6 @@ import (
 	"log"
 
 	"aqua-backend/pkg/rabbitmq"
-	//"aqua-task/internal/repositories/notifications"
-	//"aqua-task/pkg/rabbitmq"
 )
 
 type NotificationMessage struct {
@@ -21,10 +19,10 @@ func StartNotificationConsumer(rmq *rabbitmq.RabbitMQ, queue string, repo *notif
 	if err != nil {
 		log.Fatalf("Failed to consume messages: %v", err)
 	}
+
 	for msg := range msgs {
 		log.Println("Received message:", string(msg.Body))
 
-		// Parse the JSON message
 		var notificationMessage NotificationMessage
 		if err := json.Unmarshal(msg.Body, &notificationMessage); err != nil {
 			log.Printf("Failed to parse message: %v", err)
@@ -34,7 +32,6 @@ func StartNotificationConsumer(rmq *rabbitmq.RabbitMQ, queue string, repo *notif
 		userID := notificationMessage.UserID
 		message := notificationMessage.Message
 
-		// Insert into DB
 		if err := repo.InsertNotification(context.Background(), userID, message); err != nil {
 			log.Printf("Failed to insert notification: %v", err)
 		} else {

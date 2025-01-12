@@ -27,30 +27,30 @@ func (r Routes) V1CreateCustomer(c *gin.Context) {
 	r.v1.V1CreateCustomer(c)
 }
 
-func (r Routes) V1GetCustomerResources(c *gin.Context, customerId openapi_types.UUID) {
-	r.v1.V1GetCustomerResources(c, customerId)
+func (r Routes) V1GetCustomerResources(c *gin.Context, customerID openapi_types.UUID) {
+	r.v1.V1GetCustomerResources(c, customerID)
 }
 
-func (r Routes) V1CreateCustomerResources(c *gin.Context, customerId openapi_types.UUID) {
-	r.v1.V1CreateCustomerResources(c, customerId)
+func (r Routes) V1CreateCustomerResources(c *gin.Context, customerID openapi_types.UUID) {
+	r.v1.V1CreateCustomerResources(c, customerID)
 }
 
-func (r Routes) V1DeleteResource(c *gin.Context, resourceId openapi_types.UUID) {
-	r.v1.V1DeleteResource(c, resourceId)
+func (r Routes) V1DeleteResource(c *gin.Context, resourceID openapi_types.UUID) {
+	r.v1.V1DeleteResource(c, resourceID)
 }
 
-func (r Routes) V1UpdateResource(c *gin.Context, resourceId openapi_types.UUID) {
-	r.v1.V1UpdateResource(c, resourceId)
+func (r Routes) V1UpdateResource(c *gin.Context, resourceID openapi_types.UUID) {
+	r.v1.V1UpdateResource(c, resourceID)
 }
 
-func (r Routes) V1DeleteNotification(c *gin.Context, notificationId openapi_types.UUID) {
-	r.v1.V1DeleteNotification(c, notificationId)
+func (r Routes) V1DeleteNotification(c *gin.Context, notificationID openapi_types.UUID) {
+	r.v1.V1DeleteNotification(c, notificationID)
 }
 
-func (r Routes) V1GetUserNotifications(c *gin.Context, userId string) {
-	r.v1.V1GetUserNotifications(c, userId)
+func (r Routes) V1GetUserNotifications(c *gin.Context, userID string) {
+	r.v1.V1GetUserNotifications(c, userID)
 }
 
-func (r Routes) V1DeleteUserNotifications(c *gin.Context, userId string) {
-	r.v1.V1DeleteUserNotifications(c, userId)
+func (r Routes) V1DeleteUserNotifications(c *gin.Context, userID string) {
+	r.v1.V1DeleteUserNotifications(c, userID)
 }

@@ -1,9 +1,10 @@
 package v1
 
 import (
+	"context"
+
 	"aqua-backend/internal/repositories/notification"
 	pb "aqua-backend/proto"
-	"context"
 )
 
 type NotificationServer struct {
@@ -18,7 +19,8 @@ func (s *NotificationServer) GetNotifications(ctx context.Context, req *pb.GetNo
 		return nil, err
 	}
 
-	var grpcNotifications []*pb.Notification
+	grpcNotifications := make([]*pb.Notification, 0, len(notifications))
+
 	for _, n := range notifications {
 		grpcNotifications = append(grpcNotifications, &pb.Notification{
 			Id:        n.ID.String(),

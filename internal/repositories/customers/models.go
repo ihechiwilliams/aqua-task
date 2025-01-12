@@ -1,9 +1,9 @@
 package customers
 
 import (
-	"github.com/google/uuid"
 	"time"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 

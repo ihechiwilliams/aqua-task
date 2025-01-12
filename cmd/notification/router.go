@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 
 	"aqua-backend/internal/api"
@@ -11,7 +10,6 @@ import (
 )
 
 func buildRouter(app *appbase.AppBase) *gin.Engine {
-	fmt.Println("hey")
 	mux := do.MustInvokeNamed[*gin.Engine](app.Injector, appbase.InjectorApplicationRouter)
 	routes := do.MustInvoke[*api.Routes](app.Injector)
 

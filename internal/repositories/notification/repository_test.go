@@ -116,7 +116,6 @@ func (s *TestSuiteSQLRepository) TestGetNotificationsByUserID() {
 	})
 
 	s.Run("return empty slice when no notifications exist for user", func() {
-
 		rows := sqlmock.NewRows([]string{"id", "user_id", "message", "created_at"}) // No rows
 
 		s.mockDB.ExpectQuery(`SELECT \* FROM "notifications" WHERE user_id = \$1`).
@@ -185,16 +184,16 @@ func (s *TestSuiteSQLRepository) TestDeleteNotificationByID() {
 }
 
 func (s *TestSuiteSQLRepository) TestDeleteAllNotificationsByUserID() {
-	userId := "123"
+	userID := "123"
 
 	s.Run("successfully delete notifications for the user", func() {
 		s.mockDB.ExpectBegin()
 		s.mockDB.ExpectExec(`DELETE FROM "notifications" WHERE user_id = \$1`).
-			WithArgs(userId).
+			WithArgs(userID).
 			WillReturnResult(sqlmock.NewResult(0, 3)) // 3 rows affected
 		s.mockDB.ExpectCommit()
 
-		err := s.repo.DeleteAllNotificationsByUserID(s.ctx, userId)
+		err := s.repo.DeleteAllNotificationsByUserID(s.ctx, userID)
 
 		s.Require().NoError(err)
 	})
@@ -202,11 +201,11 @@ func (s *TestSuiteSQLRepository) TestDeleteAllNotificationsByUserID() {
 	s.Run("no notifications found for the user", func() {
 		s.mockDB.ExpectBegin()
 		s.mockDB.ExpectExec(`DELETE FROM "notifications" WHERE user_id = \$1`).
-			WithArgs(userId).
+			WithArgs(userID).
 			WillReturnResult(sqlmock.NewResult(0, 0)) // 0 rows affected
 		s.mockDB.ExpectCommit()
 
-		err := s.repo.DeleteAllNotificationsByUserID(s.ctx, userId)
+		err := s.repo.DeleteAllNotificationsByUserID(s.ctx, userID)
 
 		s.Require().NoError(err)
 	})
@@ -214,11 +213,11 @@ func (s *TestSuiteSQLRepository) TestDeleteAllNotificationsByUserID() {
 	s.Run("return error when database query fails", func() {
 		s.mockDB.ExpectBegin()
 		s.mockDB.ExpectExec(`DELETE FROM "notifications" WHERE user_id = \$1`).
-			WithArgs(userId).
+			WithArgs(userID).
 			WillReturnError(fmt.Errorf("database error"))
 		s.mockDB.ExpectRollback()
 
-		err := s.repo.DeleteAllNotificationsByUserID(s.ctx, userId)
+		err := s.repo.DeleteAllNotificationsByUserID(s.ctx, userID)
 
 		s.Require().Error(err)
 		s.EqualError(err, "database error")

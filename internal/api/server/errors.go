@@ -8,6 +8,7 @@ import (
 
 	"aqua-backend/internal/constants"
 	sentryUtils "aqua-backend/pkg/sentry"
+
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/gin-gonic/gin"
 	"github.com/joomcode/errorx"

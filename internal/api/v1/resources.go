@@ -1,15 +1,17 @@
 package v1
 
 import (
+	"errors"
+	"net/http"
+
 	"aqua-backend/internal/api/server"
 	"aqua-backend/internal/repositories/customers"
 	"aqua-backend/internal/repositories/resources"
-	"errors"
+
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	openapi_types "github.com/oapi-codegen/runtime/types"
 	"github.com/samber/lo"
-	"net/http"
 )
 
 type ResourcesHandler struct {
@@ -24,7 +26,7 @@ func NewResourcesHandler(resourcesRepo resources.Repository, customerRepo custom
 	}
 }
 
-func (a *API) V1CreateCustomerResources(c *gin.Context, customerId openapi_types.UUID) {
+func (a *API) V1CreateCustomerResources(c *gin.Context, customerID openapi_types.UUID) {
 	var reqBody server.V1CreateCustomerResourcesJSONRequestBody
 
 	if err := c.ShouldBindJSON(&reqBody); err != nil {
@@ -39,11 +41,11 @@ func (a *API) V1CreateCustomerResources(c *gin.Context, customerId openapi_types
 			Name:       resource.Name,
 			Type:       resource.Type,
 			Region:     resource.Region,
-			CustomerID: customerId,
+			CustomerID: customerID,
 		}
 	})
 
-	result, err := a.resourceHandler.resourcesRepo.CreateResourcesByCustomerID(c.Request.Context(), customerId, dBResources)
+	result, err := a.resourceHandler.resourcesRepo.CreateResourcesByCustomerID(c.Request.Context(), customerID, dBResources)
 	if err != nil {
 		server.ProcessingError(err, c)
 
@@ -55,8 +57,8 @@ func (a *API) V1CreateCustomerResources(c *gin.Context, customerId openapi_types
 	}))
 }
 
-func (a *API) V1GetCustomerResources(c *gin.Context, customerId openapi_types.UUID) {
-	result, err := a.resourceHandler.resourcesRepo.GetResourcesByCustomerID(c.Request.Context(), customerId)
+func (a *API) V1GetCustomerResources(c *gin.Context, customerID openapi_types.UUID) {
+	result, err := a.resourceHandler.resourcesRepo.GetResourcesByCustomerID(c.Request.Context(), customerID)
 	if err != nil {
 		server.ProcessingError(err, c)
 
@@ -68,7 +70,7 @@ func (a *API) V1GetCustomerResources(c *gin.Context, customerId openapi_types.UU
 	}))
 }
 
-func (a *API) V1UpdateResource(c *gin.Context, resourceId openapi_types.UUID) {
+func (a *API) V1UpdateResource(c *gin.Context, resourceID openapi_types.UUID) {
 	var reqBody server.V1UpdateResourceJSONRequestBody
 
 	// Decode the incoming JSON request body
@@ -82,7 +84,7 @@ func (a *API) V1UpdateResource(c *gin.Context, resourceId openapi_types.UUID) {
 		return
 	}
 
-	resource, err := a.resourceHandler.resourcesRepo.GetResourceByID(c.Request.Context(), resourceId)
+	resource, err := a.resourceHandler.resourcesRepo.GetResourceByID(c.Request.Context(), resourceID)
 	if err != nil {
 		server.ProcessingError(err, c)
 
@@ -110,8 +112,8 @@ func (a *API) V1UpdateResource(c *gin.Context, resourceId openapi_types.UUID) {
 	c.JSON(http.StatusOK, gin.H{"msg": "resource updated"})
 }
 
-func (a *API) V1DeleteResource(c *gin.Context, resourceId openapi_types.UUID) {
-	err := a.resourceHandler.resourcesRepo.DeleteResource(c.Request.Context(), resourceId)
+func (a *API) V1DeleteResource(c *gin.Context, resourceID openapi_types.UUID) {
+	err := a.resourceHandler.resourcesRepo.DeleteResource(c.Request.Context(), resourceID)
 	if err != nil {
 		server.ProcessingError(err, c)
 

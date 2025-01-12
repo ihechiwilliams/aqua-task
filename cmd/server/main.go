@@ -1,15 +1,14 @@
 package main
 
 import (
+	"aqua-backend/cmd"
+	"aqua-backend/internal/appbase"
 	"aqua-backend/pkg/rabbitmq"
+	"aqua-backend/pkg/signals"
 	"context"
 	"fmt"
 	"github.com/samber/do"
 	"net/http"
-
-	"aqua-backend/cmd"
-	"aqua-backend/internal/appbase"
-	"aqua-backend/pkg/signals"
 
 	"github.com/rs/zerolog/log"
 )
@@ -19,7 +18,8 @@ const (
 )
 
 func main() {
-	cmd.Execute() // If you are using Cobra commands, execute the root command
+	cmd.Execute()
+
 	ctx, mainCtxStop := context.WithCancel(context.Background())
 
 	app := appbase.New(
@@ -34,15 +34,17 @@ func main() {
 
 	// Simulate publishing a message
 	queue := "notifications_queue"
+
 	err := rmq.DeclareQueue(queue)
 	if err != nil {
-		log.Fatal().Msgf("Failed to declare queue: %v", err)
+		log.Error().Msgf("Failed to declare queue: %v", err)
 	}
 
 	message := `{"user_id": "123", "message": "New resource created"}`
+
 	err = rmq.PublishMessage(queue, message)
 	if err != nil {
-		log.Fatal().Msgf("Failed to publish message: %v", err)
+		log.Error().Msgf("Failed to publish message: %v", err)
 	}
 
 	log.Info().Msg("Message published!")

@@ -40,6 +40,7 @@ func main() {
 	// Start Notification Consumer in a separate goroutine
 	go func() {
 		queueName := "notifications_queue"
+
 		err := rmq.DeclareQueue(queueName)
 		if err != nil {
 			log.Fatal().Msgf("Failed to declare queue: %v", err)
@@ -51,7 +52,7 @@ func main() {
 
 	// Start gRPC server
 	go func() {
-		listener, err := net.Listen("tcp", ":50051")
+		listener, err := net.Listen("tcp", "127.0.0.1:50051")
 		if err != nil {
 			log.Fatal().Msgf("Failed to listen on port 50051: %v", err)
 		}
@@ -62,6 +63,7 @@ func main() {
 		})
 
 		log.Info().Msg("gRPC server is running on port 50051")
+
 		if err := grpcServer.Serve(listener); err != nil {
 			log.Fatal().Msgf("Failed to serve gRPC server: %v", err)
 		}
