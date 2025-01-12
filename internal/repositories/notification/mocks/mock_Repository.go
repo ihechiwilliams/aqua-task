@@ -14,9 +14,9 @@ type MockRepository struct {
 	mock.Mock
 }
 
-// DeleteAllNotificationsByUserID provides a mock function with given fields: ctx, userId
-func (_m *MockRepository) DeleteAllNotificationsByUserID(ctx context.Context, userId string) error {
-	ret := _m.Called(ctx, userId)
+// DeleteAllNotificationsByUserID provides a mock function with given fields: ctx, userID
+func (_m *MockRepository) DeleteAllNotificationsByUserID(ctx context.Context, userID string) error {
+	ret := _m.Called(ctx, userID)
 
 	if len(ret) == 0 {
 		panic("no return value specified for DeleteAllNotificationsByUserID")
@@ -24,7 +24,7 @@ func (_m *MockRepository) DeleteAllNotificationsByUserID(ctx context.Context, us
 
 	var r0 error
 	if rf, ok := ret.Get(0).(func(context.Context, string) error); ok {
-		r0 = rf(ctx, userId)
+		r0 = rf(ctx, userID)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -32,9 +32,9 @@ func (_m *MockRepository) DeleteAllNotificationsByUserID(ctx context.Context, us
 	return r0
 }
 
-// DeleteNotificationByID provides a mock function with given fields: ctx, Id
-func (_m *MockRepository) DeleteNotificationByID(ctx context.Context, Id string) error {
-	ret := _m.Called(ctx, Id)
+// DeleteNotificationByID provides a mock function with given fields: ctx, id
+func (_m *MockRepository) DeleteNotificationByID(ctx context.Context, id string) error {
+	ret := _m.Called(ctx, id)
 
 	if len(ret) == 0 {
 		panic("no return value specified for DeleteNotificationByID")
@@ -42,7 +42,7 @@ func (_m *MockRepository) DeleteNotificationByID(ctx context.Context, Id string)
 
 	var r0 error
 	if rf, ok := ret.Get(0).(func(context.Context, string) error); ok {
-		r0 = rf(ctx, Id)
+		r0 = rf(ctx, id)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -50,9 +50,9 @@ func (_m *MockRepository) DeleteNotificationByID(ctx context.Context, Id string)
 	return r0
 }
 
-// GetNotificationsByUserID provides a mock function with given fields: ctx, userId
-func (_m *MockRepository) GetNotificationsByUserID(ctx context.Context, userId string) ([]*notification.Notification, error) {
-	ret := _m.Called(ctx, userId)
+// GetNotificationsByUserID provides a mock function with given fields: ctx, userID
+func (_m *MockRepository) GetNotificationsByUserID(ctx context.Context, userID string) ([]*notification.Notification, error) {
+	ret := _m.Called(ctx, userID)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetNotificationsByUserID")
@@ -61,10 +61,10 @@ func (_m *MockRepository) GetNotificationsByUserID(ctx context.Context, userId s
 	var r0 []*notification.Notification
 	var r1 error
 	if rf, ok := ret.Get(0).(func(context.Context, string) ([]*notification.Notification, error)); ok {
-		return rf(ctx, userId)
+		return rf(ctx, userID)
 	}
 	if rf, ok := ret.Get(0).(func(context.Context, string) []*notification.Notification); ok {
-		r0 = rf(ctx, userId)
+		r0 = rf(ctx, userID)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]*notification.Notification)
@@ -72,7 +72,7 @@ func (_m *MockRepository) GetNotificationsByUserID(ctx context.Context, userId s
 	}
 
 	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
-		r1 = rf(ctx, userId)
+		r1 = rf(ctx, userID)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -80,9 +80,9 @@ func (_m *MockRepository) GetNotificationsByUserID(ctx context.Context, userId s
 	return r0, r1
 }
 
-// InsertNotification provides a mock function with given fields: ctx, userId, message
-func (_m *MockRepository) InsertNotification(ctx context.Context, userId string, message string) error {
-	ret := _m.Called(ctx, userId, message)
+// InsertNotification provides a mock function with given fields: ctx, userID, message
+func (_m *MockRepository) InsertNotification(ctx context.Context, userID string, message string) error {
+	ret := _m.Called(ctx, userID, message)
 
 	if len(ret) == 0 {
 		panic("no return value specified for InsertNotification")
@@ -90,7 +90,7 @@ func (_m *MockRepository) InsertNotification(ctx context.Context, userId string,
 
 	var r0 error
 	if rf, ok := ret.Get(0).(func(context.Context, string, string) error); ok {
-		r0 = rf(ctx, userId, message)
+		r0 = rf(ctx, userID, message)
 	} else {
 		r0 = ret.Error(0)
 	}
