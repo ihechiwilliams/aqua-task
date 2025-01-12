@@ -18,6 +18,7 @@ require (
 	github.com/samber/lo v1.47.0
 	github.com/samber/oops v1.15.0
 	github.com/spf13/cobra v1.8.1
+	github.com/steinfletcher/apitest v1.5.17
 	github.com/streadway/amqp v1.1.0
 	github.com/stretchr/testify v1.10.0
 	go.temporal.io/api v1.43.0

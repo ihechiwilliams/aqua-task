@@ -41,7 +41,7 @@ func (a *API) V1CreateCustomer(c *gin.Context) {
 	// Call the customer handler's CreateCustomer method
 	result, err := a.customersHandler.customersRepo.CreateCustomer(c.Request.Context(), newCustomer)
 	if err != nil {
-		server.BadRequestError(err, c)
+		server.ProcessingError(err, c)
 		return
 	}
 
