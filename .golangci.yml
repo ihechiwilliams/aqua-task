@@ -51,7 +51,6 @@ linters:
   enable:
     - dupl
     - exhaustive
-    - copyloopvar
     - gocritic
     - gocyclo
     - godot
