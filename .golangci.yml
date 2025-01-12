@@ -65,7 +65,6 @@ linters:
     - nonamedreturns
     - prealloc
     - stylecheck
-    - typecheck
     - unconvert
     - unused
     - wsl
