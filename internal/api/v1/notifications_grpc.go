@@ -13,7 +13,6 @@ type NotificationServer struct {
 }
 
 func (s *NotificationServer) GetNotifications(ctx context.Context, req *pb.GetNotificationsRequest) (*pb.GetNotificationsResponse, error) {
-	// Logic to fetch notifications from the database
 	notifications, err := s.Repo.GetNotificationsByUserID(ctx, req.UserId)
 	if err != nil {
 		return nil, err
