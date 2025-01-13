@@ -40,7 +40,7 @@ func (a *API) V1GetUserNotifications(c *gin.Context, userID string) {
 		return
 	}
 
-	c.JSON(http.StatusNoContent, lo.Map(result, func(notif *notification.Notification, _ int) server.UserNotificationResponseData {
+	c.JSON(http.StatusOK, lo.Map(result, func(notif *notification.Notification, _ int) server.UserNotificationResponseData {
 		return serializeNotificationToAPIResponseData(notif)
 	}))
 }
