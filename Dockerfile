@@ -52,7 +52,7 @@ RUN chmod +x /app/db/scripts/migrate.sh
 WORKDIR /app
 
 # Expose application ports
-EXPOSE 8080 9090
+EXPOSE 8080 9090 50051
 
 # Set entrypoint to wait for RabbitMQ and run the binary
 ENTRYPOINT ["/usr/local/bin/wait-for-rabbitmq.sh"]

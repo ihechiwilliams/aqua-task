@@ -1,6 +1,12 @@
 
 local:
-	go run cmd/server/*.go
+	go run cmd/server/*.go start
+
+local-see:
+	go run cmd/server/*.go seed
+
+notification-local:
+	go run cmd/notification/*.go
 
 # Run go generate locally without docker container
 generate-local:
@@ -9,9 +15,6 @@ generate-local:
 
 env:
 	cp -v .env.example .env
-
-env-test:
-	cp -v .env.test .env
 
 build-app:
 	docker compose build app-start

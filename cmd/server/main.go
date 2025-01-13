@@ -53,7 +53,7 @@ func main() {
 	// HTTP server setup
 	router := buildRouter(app)
 	httpServer := &http.Server{
-		Addr:              app.Config.ServerAddress,
+		Addr:              fmt.Sprintf(":%s", app.Config.ServerPort),
 		Handler:           router,
 		ReadHeaderTimeout: app.Config.HTTPServerTimeout(),
 	}
@@ -67,7 +67,7 @@ func main() {
 	})
 
 	// Start HTTP server
-	log.Info().Msgf("Started HTTP server on %s", app.Config.ServerAddress)
+	log.Info().Msgf("Started HTTP server on %s", app.Config.ServerPort)
 
 	// Start HTTP server in the main goroutine
 	serverErr := httpServer.ListenAndServe()

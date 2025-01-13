@@ -52,7 +52,7 @@ func main() {
 
 	// Start gRPC server
 	go func() {
-		listener, err := net.Listen("tcp", "127.0.0.1:50051")
+		listener, err := net.Listen("tcp", fmt.Sprintf(":%s", app.Config.NotificationGRPCServerPort))
 		if err != nil {
 			log.Fatal().Msgf("Failed to listen on port 50051: %v", err)
 		}
@@ -72,7 +72,7 @@ func main() {
 	// HTTP server setup
 	router := buildRouter(app)
 	httpServer := &http.Server{
-		Addr:              app.Config.NotificationServerAddress,
+		Addr:              fmt.Sprintf(":%s", app.Config.NotificationServerPort),
 		Handler:           router,
 		ReadHeaderTimeout: app.Config.HTTPServerTimeout(),
 	}
@@ -86,7 +86,7 @@ func main() {
 	})
 
 	// Start HTTP server
-	log.Info().Msgf("Started HTTP server on %s", app.Config.NotificationServerAddress)
+	log.Info().Msgf("Started HTTP server on %s", app.Config.NotificationServerPort)
 
 	// Start HTTP server in the main goroutine
 	serverErr := httpServer.ListenAndServe()

@@ -18,6 +18,12 @@ Before diving in, make sure you have:
 
 Ready to launch? Follow these steps:
 
+- Set up and populate.env file:
+
+    ```bash
+      make env
+    ```
+
 - Build app, Sync your local database with the schema and run migration:
 
     ```bash
@@ -43,3 +49,15 @@ Ready to launch? Follow these steps:
   ```bash
     make start-notification
   ```
+
+## HTTP API Endpoints
+
+API documentation for the Rest endpoints can be found inside openapi folder, then you will see the openapi.yml file
+
+## gRPC API
+
+The gRPC server provides the following methods:
+
+- `DeleteNotification`: Deletes a notification by ID.
+- `DeleteNotificationByUser`: Deletes all notifications for a user.
+- `GetNotificationsByUser`: Gets all notifications for a user.

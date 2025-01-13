@@ -7,10 +7,13 @@ services:
       - postgres
       - rabbitmq
     ports:
-      - "8080:8080"
+      - "${SERVER_PORT:-8080}:${SERVER_PORT:-8080}"
+    env_file:
+      - .env
     environment:
       DATABASE_URL: "postgres://postgres:password@postgres:5432/aqua_task?sslmode=disable"
       RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
+      SERVER_PORT: ${SERVER_PORT:-8080}
     command: ["/usr/local/bin/wait-for-rabbitmq.sh","main", "seed"] # Run the seed command
 
   app-start:
@@ -20,11 +23,14 @@ services:
     depends_on:
       - postgres
       - rabbitmq
+    env_file:
+      - .env
     ports:
-      - "8080:8080"
+      - "${SERVER_PORT:-8080}:${SERVER_PORT:-8080}"
     environment:
       DATABASE_URL: "postgres://postgres:password@postgres:5432/aqua_task?sslmode=disable"
       RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
+      SERVER_PORT: ${SERVER_PORT:-8080}
     command: ["/usr/local/bin/wait-for-rabbitmq.sh","main", "start"] # Run the start command
 
   notification:
@@ -32,14 +38,19 @@ services:
       context: .
       dockerfile: Dockerfile
     command: [ "notification" ]
+    env_file:
+      - .env
     environment:
       DATABASE_URL: "postgres://postgres:password@postgres:5432/aqua_task?sslmode=disable"
       RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
+      NOTIFICATION_SERVER_PORT: ${NOTIFICATION_SERVER_PORT:-9090}
+      NOTIFICATION_GRPC_SERVER_PORT: ${NOTIFICATION_GRPC_SERVER_PORT:-50051}
     depends_on:
       - postgres
       - rabbitmq
     ports:
-      - "9090:9090"
+      - "${NOTIFICATION_SERVER_PORT:-9090}:${NOTIFICATION_SERVER_PORT:-9090}"
+      - "${NOTIFICATION_GRPC_SERVER_PORT:-50051}:${NOTIFICATION_GRPC_SERVER_PORT:-50051}"
 
   postgres:
     image: postgres:15
